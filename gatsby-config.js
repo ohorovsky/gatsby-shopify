@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -27,6 +29,15 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: 'gatsby-source-shopify',
+      options: {
+        shopName: 'gatsby-learn-project',
+        accessToken: process.env.SHOPIFY_STOREFRONT_API_TOKEN,
+        apiVersion: "2020-01",
+        includeCollections: ["shop"],
+      }
+    }
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
