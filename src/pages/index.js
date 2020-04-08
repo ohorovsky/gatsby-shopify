@@ -1,20 +1,51 @@
 import React from "react"
-import { Link } from "gatsby"
+import { Link, graphql } from "gatsby"
+import Image from 'gatsby-image';
 
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
 
-const IndexPage = () => (
+export const query = graphql`
+  {
+  allShopifyProduct {
+    nodes {
+      id
+      title
+      images {
+        localFile {
+          childImageSharp {
+            fixed(width: 100, fit: COVER, height: 100) {
+              ...GatsbyImageSharpFixed_withWebp_tracedSVG
+            }
+          }
+        }
+      }
+      variants {
+        title
+        priceV2 {
+          amount
+          currencyCode
+        }
+        sku
+      }
+      productType
+      tags
+    }
+  }
+}
+`
+const Product = ({product}) => (
+  <div>
+  <Image fixed={product.images[0].localFile.childImageSharp.fixed}/>
+    <h2>{product.title}</h2>
+    <p>{product.productType}</p>
+    <p>{product.description}</p>
+  </div>
+)
+const IndexPage = ({data}) => (
   <Layout>
     <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
+    {data.allShopifyProduct.nodes.map(product => <Product key={product.id} product={product} />)}
   </Layout>
 )
 
